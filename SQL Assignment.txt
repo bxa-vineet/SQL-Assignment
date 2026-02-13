@@ -108,6 +108,16 @@ where s.first_name = 'Jane';
 
  Select * from student;
 
+10. Select all students with their department and address in New York. 
+
+  select s.student_id,d.department_name,a.street_address from  student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.city= 'New York';
+
+  select * from address;
   
   
 
