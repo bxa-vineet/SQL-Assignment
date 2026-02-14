@@ -59,36 +59,36 @@ select * from department;
 select * from Address;
 select * from student;
 
- -- Write a query to find the total number of students. 
+ --3. Write a query to find the total number of students. 
  select count(student_id) as Total_no_ofstudent  from student;
 
-  -- Write a query to find which department john belongs to. 
+  --4. Write a query to find which department john belongs to. 
   select d.department_name from department as d
   inner join student as s
   ON d.department_id = s.department_id
   where s.first_name = 'John';
 
---   List All Departments with Their Number of Students (Including Departments with No 
+--  5. List All Departments with Their Number of Students (Including Departments with No 
 -- Students)
   select d.department_name, count(*) as No_Of_Student from department as d
   inner join student as s
   ON d.department_id = s.department_id
   group by d.department_name;
 
--- Select all students with their department and address. 
+--6. Select all students with their department and address. 
   select s.student_id ,d.department_name, a.address_id from  student as s
   inner join department as d
   ON d.department_id = s.department_id
   inner join address as a
   ON s.address_id = a.address_id;
 
-  -- Find all students who are in the 'Computer Science' department
+  --7.  Find all students who are in the 'Computer Science' department
   select s.student_id from  student as s
   inner join department as d
   ON d.department_id = s.department_id
   where d.department_name = 'Computer Science';
 
- -- Update Jane’s city name to New York. 
+ --8. Update Jane’s city name to New York. 
 UPDATE address
 SET city = 'New York'
 WHERE address_id = (
@@ -102,7 +102,7 @@ inner join student as s
 ON s.address_id  = a.address_id
 where s.first_name = 'Jane';
 
- -- Delete a student from the student table.
+ --9. Delete a student from the student table.
  delete from student
  where student_id = 8;
 
@@ -116,8 +116,137 @@ where s.first_name = 'Jane';
   inner join address as a
   On s.address_id = a.address_id
   where a.city= 'New York';
-
   select * from address;
   
+   -- 11. Count how many students are in each department 
+  select d.department_name,count(*) as count_of_department from  student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  group by d.department_name;
+  -- 12. Find students who live in 'Springfield'
+  select s.student_id,s.first_name,s.last_name from  student as s
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.city= 'Springfield';
+
+  -- 13. Select students whose birthday falls in February 
+SELECT *
+FROM student
+WHERE birthdate >= '1900-02-01'
+AND birthdate <  '2100-03-031';
+
+ -- 14.Get the department and address details for a specific student, example john
+  select s.student_id,d.department_name,a.street_address,a.city,a.state, a.postal_code from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  inner join address as a
+  On s.address_id = a.address_id
+  where s.first_name = 'John';
+
+  -- 15. Find all students who are born within 1995 to 1998 
+  SELECT *
+  FROM student
+  WHERE birthdate >= '1995-01-01'
+  AND birthdate <=  '1998-12-31';
+  
+  -- 16. List all students and their corresponding department names, sorted by department
+  select s.student_id, d.department_name from  student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  order by d.department_name ASC;   
+  
+   --17. Find the number of students in each department who are living in 'Champaign'
+  select d.department_name,count(*) as No_of_student from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.city = 'Champaign'
+  group by d.department_name;
+
+  -- 18. Retrieve the names of students who live on 'Pine' street 
+  select s.student_id,s.first_name,s.last_name from  student as s
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.street_address like '%Pine%';19. Update the department of a student with student_id = 6 to 'Mechanical Engineering' 
+
+  -- 19. Update the department of a student with student_id = 6 to 'Mechanical Engineering' 
+  update  department
+  set department_name = 'Mechanical Engineering' 
+  where department_id = 6;
+-- 20. Find the student(s) who live in the city 'Chicago' and are in the 'Mathematics' department 
+  select s.student_id,s.first_name,s.last_name from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.city = 'Chicago' AND d.department_name = 'Mathematics';
+
+ -- 21. List all students who have an address in 'Urbana' or 'Peoria'
+  select s.student_id,s.first_name,s.last_name from student as s
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.city = 'Chicago' OR a.city = 'Peoria';
+
+  -- 22. Find the student with the highest student_id  
+  select student_id from student
+  order by student_id DESC
+  Limit 1;
+  -- 23. Find all students who are not in the 'Computer Science' department  
+  select s.student_id,s.first_name,s.last_name from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  where  d.department_name NOT IN('Computer Science');
+
+  -- 24. Count the total number of addresses in the 'Champaign' city  
+  select a.city , count(*) as total_no_of_addresses from address as a
+  where a.city = 'Champaign'
+  group by a.city;
+
+  
+  -- 25. Find the name of the student who lives at '520 Pine Rd'
+  select s.student_id,s.first_name,s.last_name from student as s
+  inner join address as a
+  On s.address_id = a.address_id
+  where a.street_address = '520 Pine Rd';
+  
+  -- 26. Get the average age of students in the 'Electrical Engineering' department 
+  select d.department_name, ROUND(AVG(EXTRACT(YEAR FROM AGE(CURRENT_DATE, s.birthdate))), 2) AS avg_age
+  from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  where  d.department_name ='Electrical Engineering'
+  group by d.department_name;
+  
+  
+  -- 27. List the students, their department, and the city where they live, but only for those in 
+  --     departments starting with 'M'  
+  select s.student_id,s.first_name,s.last_name,d.department_name,a.city from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  inner join address as a
+  On s.address_id = a.address_id
+  where  d.department_name Like 'M%';
+  -- 28. Delete a student from the 'Mechanical Engineering' department  
+  delete from student as s
+  where s.student_id IN 
+  (select student_id
+  from student as s
+  inner join department as d
+  ON s.department_id = d.department_id
+  where  d.department_name ='Mechanical Engineering');
+
+ 
+  
+
+
+   
+
+  
+
+  
+  
+
+
   
 
